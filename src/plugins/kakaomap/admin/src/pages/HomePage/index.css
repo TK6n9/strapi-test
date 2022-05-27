@@ -1,0 +1,15 @@
+#kakao-map-container {
+  width: 150px;
+  margin: 0 auto;
+  padding: 0;
+  display: flex;
+  justify-items: center;
+  margin-top: 30px;
+}
+.info_body {
+  margin: 0 auto;
+  padding: 0;
+  display: flex;
+  justify-items: center;
+  margin-top: 150px;
+}

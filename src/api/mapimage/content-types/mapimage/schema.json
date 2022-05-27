@@ -1,0 +1,22 @@
+{
+  "kind": "collectionType",
+  "collectionName": "mapimages",
+  "info": {
+    "singularName": "mapimage",
+    "pluralName": "mapimages",
+    "displayName": "mapimage"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "mapimage": {
+      "allowedTypes": [
+        "images"
+      ],
+      "type": "media",
+      "multiple": false
+    }
+  }
+}
