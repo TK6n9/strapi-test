@@ -1,136 +1,55 @@
-import React, { useState, useEffect } from "react";
-import DaumPostcode from "react-daum-postcode";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-// import { Map, MapMarker } from "react-kakao-maps-sdk";
-// import { useHistory } from "react-router-dom";
-import "./index.css";
+import KakaoMap from "./KaKaoMap";
 
-// const instance = axios.create({
-//   baseURL: process.env.STRAPI_ADMIN_BACKEND_URL,
-// });
+function HomePage() {
+  var REST_API_KEY = "9e96199ed2fd3c760008ee0140526835";
 
-const HomePage = (data) => {
-  // const [info, setInfo] = useState();
-  // const [markers, setMarkers] = useState([]);
-  // const [map, setMap] = useState();
+  const [주소, 세팅주소] = useState("주식회사 아뮤즈");
+  const [엑스, 세팅엑스] = useState(35.14771756896735);
+  const [와이, 세팅와이] = useState(129.05869530644782);
 
-  // let history = useHistory();
-  let fullAddress = data.address;
-  let extraAddress = "";
+  const onChange = (e) => {
+    세팅주소(e.target.value);
+  };
 
-  if (data.addressType === "R") {
-    if (data.bname !== "") {
-      extraAddress += data.bname;
+  function 전송() {
+    try {
+      axios({
+        method: "get",
+        url: `https://dapi.kakao.com//v2/local/search/address.json?query=${주소}`,
+        headers: { Authorization: "KakaoAK " + REST_API_KEY },
+      })
+        .then(function (response) {
+          세팅주소(response.data.documents[0].address.address_name);
+          세팅엑스(parseFloat(response.data.documents[0].x));
+          세팅와이(parseFloat(response.data.documents[0].y));
+          // 세팅엑스(JSON.stringify(response.data.documents[0].x));
+          // 세팅와이(JSON.stringify(response.data.documents[0].y));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } catch (err) {
+      console.log("에러발생", err);
     }
-    if (data.buildingName !== "") {
-      extraAddress +=
-        extraAddress !== "" ? `, ${data.buildingName}` : data.buildingName;
-    }
-    fullAddress += extraAddress !== "" ? ` (${extraAddress})` : "";
   }
-  console.log(data);
-
-  // useEffect(() => {
-  //   if (!map) return;
-  //   const ps = new kakao.maps.services.Places();
-
-  //   ps.keywordSearch("", (data, status, _pagination) => {
-  //     if (status === kakao.maps.services.Status.OK) {
-  //       // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
-  //       // LatLngBounds 객체에 좌표를 추가합니다
-  //       const bounds = new kakao.maps.LatLngBounds();
-  //       let markers = [];
-
-  //       for (var i = 0; i < data.length; i++) {
-  //         // @ts-ignore
-  //         markers.push({
-  //           position: {
-  //             lat: data[i].y,
-  //             lng: data[i].x,
-  //           },
-  //           content: data[i].place_name,
-  //         });
-  //         // @ts-ignore
-  //         bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
-  //       }
-  //       setMarkers(markers);
-
-  //       // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
-  //       map.setBounds(bounds);
-  //     }
-  //   });
-  // }, [map]);
-
-  // axios.post("http://localhost:1337/api/address1s", {
-  //   data: {
-  //     adress1: data.address,
-  //   },
-  // });
 
   return (
     <>
-      <DaumPostcode onComplete={HomePage} />
-
-      {/* <div>
-        <button>돌아가</button>
-        <div id="MapLocation">
-          <Map
-            center={{ lat: 33.5563, lng: 126.79581 }}
-            style={{ width: "50%", height: "300px" }}
-          >
-            <MapMarker position={{ lat: 33.55635, lng: 126.795841 }}>
-              <div style={{ color: "#000" }}>aaaa{data.address}</div>
-            </MapMarker>
-          </Map>
-        </div>
-      </div> */}
-      {/* <Map // 로드뷰를 표시할 Container
-        center={{
-          lat: 37.566826,
-          lng: 126.9786567,
-        }}
-        style={{
-          margin: "0 auto",
-          width: "30%",
-          height: "250px",
-        }}
-        level={3}
-        onCreate={setMap}
-      >
-        {markers.map((marker) => (
-          <MapMarker
-            key={`marker-${marker.content}-${marker.position.lat},${marker.position.lng}`}
-            position={marker.position}
-            onClick={() => setInfo(marker)}
-          >
-            {info && info.content === marker.content && (
-              <div style={{ color: "#000" }}>{marker.content}</div>
-            )}
-          </MapMarker>
-        ))}
-      </Map> */}
+      {
+        <input
+          placeholder="주소를 입력해세요"
+          onChange={onChange}
+          value={주소}
+        ></input>
+      }
+      {<button onClick={전송}>전송하기</button>}
+      <br />
+      <br />
+      <KakaoMap 주소전달={주소} 엑스전달={엑스} 와이전달={와이}></KakaoMap>
     </>
   );
-};
-
-// async function testadress(data) {
-//   try {
-//     await axios
-//       .post(`http://localhost:1337/api/addresses`, {
-//         data: {
-//           address: data.address,
-//         },
-//       })
-//       .then((result) => {
-//         console.log(result);
-//       })
-//       .catch((err) => {
-//         console.log("에러발생");
-//         console.log(err);
-//       });
-//   } catch (e) {
-//     console.log(e);
-//   }
-// }
+}
 
 export default HomePage;

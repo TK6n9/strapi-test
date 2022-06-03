@@ -1,0 +1,25 @@
+{
+  "kind": "collectionType",
+  "collectionName": "address_infos",
+  "info": {
+    "singularName": "address-info",
+    "pluralName": "address-infos",
+    "displayName": "AddressInfo",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "addressName": {
+      "type": "text"
+    },
+    "addressX": {
+      "type": "text"
+    },
+    "addressY": {
+      "type": "text"
+    }
+  }
+}
